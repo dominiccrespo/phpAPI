@@ -4,13 +4,13 @@ class Subject{
     // Database connection and table name 
 
     private $conn; 
-    private $table_name = "subject";
+    private $table_name = "subjects";
     // object properties 
     public $id; 
     public $subject_desc; 
 
     // constuctor with $db as database connection
-    public function _construct($db)
+    public function __construct($db)
     {
         $this->conn = $db; 
     }
@@ -34,7 +34,7 @@ class Subject{
         //Execute
         if($stmt->execute())
             return true; 
-            
+
         return false; 
         
     }

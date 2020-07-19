@@ -8,12 +8,12 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"); 
 
 include_once '../config/database.php'; 
-include_once '../objects/subject'; 
+include_once '../objects/subject.php'; 
 
 $database = new Database(); 
 $db = $database->getConnection(); 
 
-$product = new Product($db); 
+$subject = new Subject($db); 
 
 $data = json_decode(file_get_contents("php://input")); 
 
@@ -21,10 +21,10 @@ $data = json_decode(file_get_contents("php://input"));
 if(!empty($data->subject_desc))
 {
     // Set property values 
-    $product->subject_desc = $data->subject_desc; 
+    $subject->subject_desc = $data->subject_desc; 
 
     // Create the subject
-    if($product->create())
+    if($subject->create())
     {
         // Set response code 
         http_response_code(201); 
