@@ -5,20 +5,20 @@ class Subject{
 
     private $conn; 
     private $table_name = "subjects";
-    // object properties 
+    // Object properties 
     public $id; 
     public $subject_desc; 
 
-    // constuctor with $db as database connection
+    // Constuctor with $db as database connection
     public function __construct($db)
     {
         $this->conn = $db; 
     }
 
-    //Create 
+    // Create 
     function create()
     {
-        //query to insert 
+        // Query to insert 
         $query = "INSERT INTO 
                     ". $this->table_name."
                 SET
@@ -38,9 +38,51 @@ class Subject{
         return false; 
         
     }
-    //Read 
+    
+    // Read 
+    function read()
+    {
+        // Query to read
+        $query = "SELECT 
+                    id, subject_desc 
+                FROM 
+                    ".$this->table_name; 
+        // Prepare 
+        $stmt = $this->conn->prepare($query); 
 
+        // Execute
+        $stmt->execute(); 
+
+        return $stmt; 
+    }
+
+    // Read by id
+    function readById()
+    {
+        // Query to read
+        $query = "SELECT 
+                    id, subject_desc
+                FROM 
+                    ".$this->table_name."
+                WHERE 
+                    id = :id"; 
+        // Prepare query statement 
+        $stmt = $this->conn->prepare($query); 
+
+        // Sanitize 
+        $this->id = htmlspecialchars(strip_tags($this->id)); 
+
+        // Bind
+        $stmt->bindParam(':id', $this->id); 
+        
+        // Execute
+        $stmt->execute(); 
+
+        return $stmt; 
+    }
+    
     //Update 
 
     //Delete
 }
+?> 
