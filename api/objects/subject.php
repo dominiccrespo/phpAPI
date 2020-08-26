@@ -85,7 +85,7 @@ class Subject{
         $this->subject_desc = $row['subject_desc']; 
     }
     
-    //Update 
+    // Update 
     function update()
     {
         // Update query
@@ -114,6 +114,91 @@ class Subject{
         return false; 
     }
 
-    //Delete
+    // Delete
+    function delete()
+    {
+        // Delete query 
+        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?"; 
+
+        // Prepare query 
+        $stmt = $this->conn->prepare($query); 
+
+        // Sanitize
+        $this->id=htmlspecialchars(strip_tags($this->id)); 
+
+        // Bind id of record to delete 
+        $stmt->bindParam(1,$this->id); 
+
+        // Execute query
+        if($stmt->execute())
+        {
+            return true; 
+        }
+
+        return false; 
+    }
+
+    // Search
+    function search($keywords)
+    {
+        // Select all query 
+        $query = "SELECT 
+                    id, subject_desc 
+                FROM 
+                " . $this->table_name . " 
+                WHERE subject_desc LIKE ?"; 
+        
+        // Prepare query statment 
+        $stmt = $this->conn->prepare($query); 
+
+        // Sanitize 
+        $keywords=htmlspecialchars(strip_tags($keywords)); 
+        $keywords = "%{$keywords}%"; 
+
+        // Bind 
+        $stmt->bindParam(1, $keywords); 
+
+        // Execute query
+        $stmt->execute(); 
+
+        return $stmt; 
+    }
+
+    // Read Paging 
+    function readPaging($from_record_num, $records_per_page)
+    {
+        // Select query
+        $query = "SELECT 
+                    id, subject_desc
+                FROM 
+                " . $this->table_name . "
+                LIMIT ?,?"; 
+        
+        // Prepare query statement 
+        $stmt = $this->conn->prepare($query); 
+
+        // bind 
+        $stmt->bindParam(1, $from_record_num, PDO::PARAM_INT); 
+        $stmt->bindParam(2, $records_per_page, PDO::PARAM_INT);
+        
+        // Execute query
+        $stmt->execute(); 
+
+        // Return values from database
+        return $stmt; 
+
+    }
+
+    // Used for paging subjects 
+    public function count()
+    {
+        $query = "SELECT COUNT(*) as total_rows FROM " . $this->table_name . ""; 
+
+        $stmt = $this->conn->prepare($query); 
+        $stmt->execute(); 
+        $row = $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        return $row['total_rows']; 
+    }
 }
 ?> 
