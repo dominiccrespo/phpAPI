@@ -65,23 +65,54 @@ class Subject{
                 FROM 
                     ".$this->table_name."
                 WHERE 
-                    id = :id"; 
+                    id = ? 
+                LIMIT
+                    0,1"; 
         // Prepare query statement 
         $stmt = $this->conn->prepare($query); 
 
-        // Sanitize 
-        $this->id = htmlspecialchars(strip_tags($this->id)); 
-
         // Bind
-        $stmt->bindParam(':id', $this->id); 
+        $stmt->bindParam(1, $this->id); 
         
         // Execute
         $stmt->execute(); 
 
-        return $stmt; 
+        // get retrieved row
+        $row = $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        // set values to object properties 
+        $this->id = $row['id']; 
+        $this->subject_desc = $row['subject_desc']; 
     }
     
     //Update 
+    function update()
+    {
+        // Update query
+        $query = "UPDATE
+                    ". $this->table_name ."
+                SET
+                    subject_desc = :subject_desc
+                WHERE
+                    id = :id";
+        // Prepare query
+        $stmt = $this->conn->prepare($query); 
+
+        // Sanitize
+        $this->subject_desc = htmlspecialchars(strip_tags($this->subject_desc)); 
+
+        // Bind new values 
+        $stmt->bindParam(':subject_desc', $this->subject_desc); 
+        $stmt->bindParam(':id', $this->id); 
+
+        // Execute the query
+        if($stmt->execute())
+        {
+            return true; 
+        }
+        
+        return false; 
+    }
 
     //Delete
 }

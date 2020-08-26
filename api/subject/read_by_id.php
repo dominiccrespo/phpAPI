@@ -12,6 +12,29 @@ $db = $database->getConnection();
 
 $subject = new Subject($db); 
 
-// Check if ID is present
+$subject->id = isset($_GET['id']) ? $_GET['id'] : die(); 
 
+$subject->readById(); 
+
+if($subject->subject_desc!=null)
+{
+    $subject_arr = array(
+        "id" => $subject->id, 
+        "description" => $subject->subject_desc 
+    ); 
+
+    // Set response code 
+    http_response_code(200); 
+
+    // Json format 
+    echo json_encode($subject_arr); 
+}
+else
+{
+    // Set response code
+    http_response_code(404); 
+
+    // Tell the user 
+    echo json_encode(array("message" => "Subject does not exist.")); 
+}
 ?> 
