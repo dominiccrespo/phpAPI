@@ -112,5 +112,73 @@ class Book{
 
         return $stmt; 
     }
+
+     // Update 
+     function update()
+     { 
+        $setUpdate = array(); 
+
+        if($this->book_desc != -1)
+        {
+            array_push($setUpdate, "book_desc"); 
+        }
+        if($this->grade_level != -1)
+        {
+            array_push($setUpdate, "grade_level"); 
+        }
+        if($this->subject_id != -1)
+        {
+            array_push($setUpdate, "subject_id"); 
+        }
+        if(count($setUpdate) == 0)
+        {
+            return false; 
+        }
+        $updateString = ""; 
+
+        for($i = 0; $i < count($setUpdate); $i++)
+        {
+            if($i == count($setUpdate)-1)
+                $updateString .= $setUpdate[$i] . "= :". $setUpdate[$i]; 
+            else
+                $updateString .= $setUpdate[$i] . "= :". $setUpdate[$i].","; 
+        } 
+         // Update query
+         $query = "UPDATE
+                     ". $this->table_name ."
+                 SET ".
+                    $updateString
+                 ." WHERE
+                     id = :id";
+         // Prepare query
+         $stmt = $this->conn->prepare($query); 
+ 
+        // Sanitize 
+        if($this->book_desc != -1)
+        {
+            $this->book_desc = htmlspecialchars(strip_tags($this->book_desc)); 
+            $stmt->bindParam(':book_desc', $this->book_desc);  
+        }
+        if($this->grade_level != -1)
+        {
+            $this->grade_level = htmlspecialchars(strip_tags($this->grade_level)); 
+            $stmt->bindParam(':grade_level', $this->grade_level);  
+        }
+        if($this->subject_id != -1)
+        {
+            $this->subject_id = htmlspecialchars(strip_tags($this->subject_id)); 
+            $stmt->bindParam(':subject_id', $this->subject_id);  
+        }
+         $stmt->bindParam(':id', $this->id);
+        
+ 
+         // Execute the query
+         if($stmt->execute())
+         {
+             return true; 
+         }
+         
+         return false; 
+     }
 }
 ?> 
