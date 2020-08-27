@@ -74,6 +74,21 @@ class Book{
         
         // Prepare 
         $stmt = $this->conn->prepare($query); 
+
+        // Bind 
+        $stmt->bindParam(1, $this->id); 
+
+        // Execute 
+        $stmt->execute(); 
+
+        // Get retrieved row
+        $row = $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        // Set values to object properties 
+        $this->id = $row['id']; 
+        $this->book_desc = $row['book_desc'];
+        $this->subject_id = $row['subject_id']; 
+        $this->grade_level = $row['grade_level'];  
     }
 }
 ?> 
