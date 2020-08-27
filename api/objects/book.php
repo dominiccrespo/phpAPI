@@ -90,5 +90,27 @@ class Book{
         $this->subject_id = $row['subject_id']; 
         $this->grade_level = $row['grade_level'];  
     }
+
+    // Read by subject ID 
+    public function readBySubjectId()
+    {
+        // Query to read 
+        $query = "SELECT 
+                    id, subject_id, book_desc, grade_level
+                FROM " . $this->table_name . " 
+                WHERE subject_id = ? 
+                ORDER BY id"; 
+        
+        // Prepare 
+        $stmt = $this->conn->prepare($query); 
+
+        // Bind 
+        $stmt->bindParam(1, $this->subject_id); 
+
+        // Execute 
+        $stmt->execute(); 
+
+        return $stmt; 
+    }
 }
 ?> 
