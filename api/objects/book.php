@@ -61,5 +61,19 @@ class Book{
 
         return $stmt; 
     }
+
+    // Read By ID 
+    public function readById()
+    {
+        // Query to read 
+        $query = "SELECT 
+                    id, subject_id, book_desc, grade_level
+                FROM " . $this->table_name . " 
+                WHERE id = ?
+                LIMIT 0,1"; 
+        
+        // Prepare 
+        $stmt = $this->conn->prepare($query); 
+    }
 }
 ?> 
