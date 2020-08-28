@@ -180,5 +180,29 @@ class Book{
          
          return false; 
      }
+
+      // Delete
+    function delete()
+    {
+        // Delete query 
+        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?"; 
+
+        // Prepare query 
+        $stmt = $this->conn->prepare($query); 
+
+        // Sanitize
+        $this->id=htmlspecialchars(strip_tags($this->id)); 
+
+        // Bind id of record to delete 
+        $stmt->bindParam(1,$this->id); 
+
+        // Execute query
+        if($stmt->execute())
+        {
+            return true; 
+        }
+
+        return false; 
+    }
 }
 ?> 
